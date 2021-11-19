@@ -19,11 +19,11 @@
 import "./display.js";
 import "./machine.js";
 
-let counter = 0;
+let counter = 0n;
 
 // states
-document.getElementById("states-add-row")?.addEventListener("click", () => {
-  document.getElementById("states-body")?.insertAdjacentHTML(
+document.getElementById("states-add-row").addEventListener("click", () => {
+  document.getElementById("states-body").insertAdjacentHTML(
     "beforeend",
     `
 <tr id="states-row-${counter}">
@@ -73,15 +73,63 @@ document.getElementById("states-add-row")?.addEventListener("click", () => {
   const captureCounter = counter;
   document
     .getElementById(`states-delete-${captureCounter}`)
-    ?.addEventListener("click", () => {
-      document.getElementById(`states-row-${captureCounter}`)?.remove();
+    .addEventListener("click", () => {
+      document.getElementById(`states-row-${captureCounter}`).remove();
     });
+
   ++counter;
 });
+document.getElementById("states-delete-all").addEventListener("click", () => {
+  document.getElementById("states-body").innerHTML = "";
+});
+
+document
+  .getElementById("accepting-states-add-row")
+  .addEventListener("click", () => {
+    document.getElementById("accepting-states-body").insertAdjacentHTML(
+      "beforeend",
+      `
+<tr id="accepting-states-row-${counter}">
+  <td>
+    <input
+      type="text"
+      class="form-control form-control-sm code-input"
+      id="accepting-states-state-${counter}"
+    />
+  </td>
+  <td>
+    <button
+      type="reset"
+      class="btn btn-sm btn-danger"
+      id="accepting-states-delete-${counter}"
+    >
+      &#xD7;
+    </button>
+  </td>
+</tr>
+`
+    );
+
+    const captureCounter = counter;
+    document
+      .getElementById(`accepting-states-delete-${captureCounter}`)
+      .addEventListener("click", () => {
+        document
+          .getElementById(`accepting-states-row-${captureCounter}`)
+          .remove();
+      });
+
+    ++counter;
+  });
+document
+  .getElementById("accepting-states-delete-all")
+  .addEventListener("click", () => {
+    document.getElementById("accepting-states-body").innerHTML = "";
+  });
 
 // tests
-document.getElementById("tests-add-row")?.addEventListener("click", () => {
-  document.getElementById("states-body")?.insertAdjacentHTML(
+document.getElementById("tests-add-row").addEventListener("click", () => {
+  document.getElementById("tests-body").insertAdjacentHTML(
     "beforeend",
     `
 <tr id="tests-row-${counter}">
@@ -99,6 +147,8 @@ document.getElementById("tests-add-row")?.addEventListener("click", () => {
     <button type="reset" class="btn btn-sm btn-primary" id="tests-examine-${counter}">
       &#x1f50d;
     </button>
+  </td>
+  <td>
     <button type="reset" class="btn btn-sm btn-danger" id="tests-delete-${counter}">
       &#xD7;
     </button>
@@ -110,13 +160,17 @@ document.getElementById("tests-add-row")?.addEventListener("click", () => {
   const captureCounter = counter;
   document
     .getElementById(`tests-examine-${captureCounter}`)
-    ?.addEventListener("click", () => {
+    .addEventListener("click", () => {
       // TODO
     });
   document
     .getElementById(`tests-delete-${captureCounter}`)
-    ?.addEventListener("click", () => {
-      document.getElementById(`tests-row-${captureCounter}`)?.remove();
+    .addEventListener("click", () => {
+      document.getElementById(`tests-row-${captureCounter}`).remove();
     });
+
   ++counter;
+});
+document.getElementById("tests-delete-all").addEventListener("click", () => {
+  document.getElementById("tests-body").innerHTML = "";
 });

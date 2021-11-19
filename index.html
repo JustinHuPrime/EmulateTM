@@ -51,16 +51,31 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       <div class="row m-0">
         <div class="col center">
           <div class="btn-group btn-group-primary">
-            <button type="button" class="btn btn-primary" id="run-start">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="run-start"
+              disabled
+            >
               &#x23EE;
             </button>
-            <button type="button" class="btn btn-primary" id="run-back">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="run-back"
+              disabled
+            >
               &#x25C0;
             </button>
-            <button type="button" class="btn btn-primary" id="run-next">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="run-next"
+              disabled
+            >
               &#x25B6;
             </button>
-            <button type="button" class="btn btn-primary" id="run-end">
+            <button type="button" class="btn btn-primary" id="run-end" disabled>
               &#x23ED;
             </button>
           </div>
@@ -77,14 +92,70 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <th scope="col">Next State</th>
                 <th scope="col">Next Symbol</th>
                 <th scope="col">Move</th>
-                <th scope="col"></th>
+                <th scope="col">
+                  <button
+                    type="reset"
+                    class="btn btn-sm btn-danger"
+                    id="states-delete-all"
+                  >
+                    &#xD7;
+                  </button>
+                </th>
               </tr>
             </thead>
             <tbody id="states-body"></tbody>
           </table>
           <button type="button" class="btn btn-primary" id="states-add-row">
-            Add Row
+            Add State
           </button>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Accepting States</th>
+                <th scope="col">
+                  <button
+                    type="reset"
+                    class="btn btn-sm btn-danger"
+                    id="accepting-states-delete-all"
+                  >
+                    &#xD7;
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="accepting-states-body"></tbody>
+          </table>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="accepting-states-add-row"
+          >
+            Add Accepting State
+          </button>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Start State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="start-state"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="error-message-container" hidden>
+            <h2>Errors</h2>
+            <div id="error-messages">
+              <p>not a valid symbol</p>
+            </div>
+          </div>
         </div>
         <div class="col">
           <h1>Tests</h1>
@@ -102,13 +173,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     &#x1F504;
                   </button>
                 </th>
-                <th></th>
+                <th scope="col"></th>
+                <th scope="col">
+                  <button
+                    type="reset"
+                    class="btn btn-sm btn-danger"
+                    id="tests-delete-all"
+                  >
+                    &#xD7;
+                  </button>
+                </th>
               </tr>
             </thead>
             <tbody id="tests-body"></tbody>
           </table>
           <button type="button" class="btn btn-primary" id="tests-add-row">
-            Add Row
+            Add Test
           </button>
         </div>
       </div>

@@ -16,6 +16,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import machine from "./machine.js";
+
 document.getElementById("run-start")?.addEventListener("click", () => {
   // TODO
 });
