@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<!--
+Copyright 2021 Justin Hu
+This file is part of EmulateTM.
+
+EmulateTM is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+EmulateTM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with EmulateTM. If not, see <https://www.gnu.org/licenses/>.
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- bootstrap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="main.css" />
+    <script src="scripts/main.js" type="module"></script>
+
+    <title>Emulate a Turing Machine</title>
+  </head>
+
+  <body class="vh-100 vw-100">
+    <div class="container-fluid w-100 h-100 px-0">
+      <div class="row m-0 h-25 overflow-x-scroll">
+        <canvas class="h-100" id="canvas"></canvas>
+      </div>
+      <div class="row m-0">
+        <div class="col center">
+          <div class="btn-group btn-group-primary">
+            <button type="button" class="btn btn-primary" id="run-start">
+              &#x23EE;
+            </button>
+            <button type="button" class="btn btn-primary" id="run-back">
+              &#x25C0;
+            </button>
+            <button type="button" class="btn btn-primary" id="run-next">
+              &#x25B6;
+            </button>
+            <button type="button" class="btn btn-primary" id="run-end">
+              &#x23ED;
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row m-0">
+        <div class="col">
+          <h1>States</h1>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">State</th>
+                <th scope="col">Symbol</th>
+                <th scope="col">Next State</th>
+                <th scope="col">Next Symbol</th>
+                <th scope="col">Move</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="states-body">
+              <tr id="row-0">
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="states-state-0"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="states-symbol-0"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="states-next-state-0"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="states-next-symbol-0"
+                  />
+                </td>
+                <td>
+                  <select class="form-select form-select-sm" id="states-move-0">
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                  </select>
+                </td>
+                <td>
+                  <button
+                    type="reset"
+                    class="btn btn-sm btn-danger"
+                    id="states-delete-0"
+                  >
+                    &#xD7;
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-primary" id="states-add-row">
+            Add Row
+          </button>
+        </div>
+        <div class="col">
+          <h1>Tests</h1>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" class="w-75">Tape</th>
+                <th scope="col">
+                  Result
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-primary"
+                    id="tests-rerun"
+                  >
+                    &#x1F504;
+                  </button>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tests-body">
+              <td>
+                <input
+                  type="text"
+                  class="form-control form-control-sm code-input"
+                  id="tests-tape-0"
+                />
+              </td>
+              <td>
+                <code id="tests-result-0">Accept</code>
+              </td>
+              <td>
+                <button
+                  type="reset"
+                  class="btn btn-sm btn-primary"
+                  id="tests-examine-0"
+                >
+                  &#x1f50d;
+                </button>
+                <button
+                  type="reset"
+                  class="btn btn-sm btn-danger"
+                  id="tests-delete-0"
+                >
+                  &#xD7;
+                </button>
+              </td>
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-primary" id="tests-add-row">
+            Add Row
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
