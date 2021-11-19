@@ -58,7 +58,7 @@ document.getElementById("states-add-row").addEventListener("click", () => {
   <td>
     <select class="form-select form-select-sm" id="states-move-${counter}">
       <option value="left">Left</option>
-      <option value="right">Right</option>
+      <option value="right" selected>Right</option>
     </select>
   </td>
   <td>
