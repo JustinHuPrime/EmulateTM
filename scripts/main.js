@@ -16,4 +16,107 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-console.log("hello, world!");
+import "./display.js";
+import "./machine.js";
+
+let counter = 0;
+
+// states
+document.getElementById("states-add-row")?.addEventListener("click", () => {
+  document.getElementById("states-body")?.insertAdjacentHTML(
+    "beforeend",
+    `
+<tr id="states-row-${counter}">
+  <td>
+    <input
+      type="text"
+      class="form-control form-control-sm code-input"
+      id="states-state-${counter}"
+    />
+  </td>
+  <td>
+    <input
+      type="text"
+      class="form-control form-control-sm code-input"
+      id="states-symbol-${counter}"
+    />
+  </td>
+  <td>
+    <input
+      type="text"
+      class="form-control form-control-sm code-input"
+      id="states-next-state-${counter}"
+    />
+  </td>
+  <td>
+    <input
+      type="text"
+      class="form-control form-control-sm code-input"
+      id="states-next-symbol-${counter}"
+    />
+  </td>
+  <td>
+    <select class="form-select form-select-sm" id="states-move-${counter}">
+      <option value="left">Left</option>
+      <option value="right">Right</option>
+    </select>
+  </td>
+  <td>
+    <button type="reset" class="btn btn-sm btn-danger" id="states-delete-${counter}">
+      &#xD7;
+    </button>
+  </td>
+</tr>
+`
+  );
+
+  const captureCounter = counter;
+  document
+    .getElementById(`states-delete-${captureCounter}`)
+    ?.addEventListener("click", () => {
+      document.getElementById(`states-row-${captureCounter}`)?.remove();
+    });
+  ++counter;
+});
+
+// tests
+document.getElementById("tests-add-row")?.addEventListener("click", () => {
+  document.getElementById("states-body")?.insertAdjacentHTML(
+    "beforeend",
+    `
+<tr id="tests-row-${counter}">
+  <td>
+    <input
+      type="text"
+      class="form-control form-control-sm code-input"
+      id="tests-tape-${counter}"
+    />
+  </td>
+  <td>
+    <code id="tests-result-${counter}">Not yet run</code>
+  </td>
+  <td>
+    <button type="reset" class="btn btn-sm btn-primary" id="tests-examine-${counter}">
+      &#x1f50d;
+    </button>
+    <button type="reset" class="btn btn-sm btn-danger" id="tests-delete-${counter}">
+      &#xD7;
+    </button>
+  </td>
+</tr>
+`
+  );
+
+  const captureCounter = counter;
+  document
+    .getElementById(`tests-examine-${captureCounter}`)
+    ?.addEventListener("click", () => {
+      // TODO
+    });
+  document
+    .getElementById(`tests-delete-${captureCounter}`)
+    ?.addEventListener("click", () => {
+      document.getElementById(`tests-row-${captureCounter}`)?.remove();
+    });
+  ++counter;
+});
