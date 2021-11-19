@@ -58,7 +58,7 @@ function render() {
 
   canvas.height = canvas.clientHeight;
   const cellWidth = canvas.height * 0.25;
-  const tapeWidth = (step.tape.length + 2) * cellWidth;
+  const tapeWidth = (step.tape.length + 1) * cellWidth;
   canvas.style.width = `${Math.max(tapeWidth, window.innerWidth)}px`;
   canvas.width = canvas.clientWidth;
 
@@ -76,9 +76,6 @@ function render() {
   }px SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace`;
 
-  ctx.strokeRect(x, cellWidth / 2, cellWidth, cellWidth);
-  ctx.fillText("\u{2026}", x + cellWidth / 2, cellWidth);
-  x += cellWidth;
   for (let idx = 0; idx < step.tape.length; idx++) {
     const character = step.tape[idx];
     ctx.strokeRect(x, cellWidth / 2, cellWidth, cellWidth);

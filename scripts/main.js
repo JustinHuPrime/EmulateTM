@@ -83,50 +83,6 @@ document.getElementById("states-delete-all").addEventListener("click", () => {
   document.getElementById("states-body").innerHTML = "";
 });
 
-document
-  .getElementById("accepting-states-add-row")
-  .addEventListener("click", () => {
-    document.getElementById("accepting-states-body").insertAdjacentHTML(
-      "beforeend",
-      `
-<tr id="accepting-states-row-${counter}">
-  <td>
-    <input
-      type="text"
-      class="form-control form-control-sm code-input"
-      id="accepting-states-state-${counter}"
-    />
-  </td>
-  <td>
-    <button
-      type="reset"
-      class="btn btn-sm btn-danger"
-      id="accepting-states-delete-${counter}"
-    >
-      &#xD7;
-    </button>
-  </td>
-</tr>
-`
-    );
-
-    const captureCounter = counter;
-    document
-      .getElementById(`accepting-states-delete-${captureCounter}`)
-      .addEventListener("click", () => {
-        document
-          .getElementById(`accepting-states-row-${captureCounter}`)
-          .remove();
-      });
-
-    ++counter;
-  });
-document
-  .getElementById("accepting-states-delete-all")
-  .addEventListener("click", () => {
-    document.getElementById("accepting-states-body").innerHTML = "";
-  });
-
 // tests
 document.getElementById("tests-add-row").addEventListener("click", () => {
   document.getElementById("tests-body").insertAdjacentHTML(

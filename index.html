@@ -111,31 +111,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Accepting States</th>
-                <th scope="col">
-                  <button
-                    type="reset"
-                    class="btn btn-sm btn-danger"
-                    id="accepting-states-delete-all"
-                  >
-                    &#xD7;
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody id="accepting-states-body"></tbody>
-          </table>
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="accepting-states-add-row"
-          >
-            Add Accepting State
-          </button>
-          <table class="table">
-            <thead>
-              <tr>
                 <th scope="col">Start State</th>
+                <th scope="col">Accept State</th>
+                <th scope="col">Reject State</th>
               </tr>
             </thead>
             <tbody>
@@ -145,6 +123,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     type="text"
                     class="form-control form-control-sm code-input"
                     id="start-state"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="accept-state"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm code-input"
+                    id="reject-state"
                   />
                 </td>
               </tr>

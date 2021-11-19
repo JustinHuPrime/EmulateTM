@@ -21,26 +21,28 @@ import { clear } from "./display.js";
 class Machine {
   /**
    * @param {Map<string, Map<string, {state: string, symbol: string, move: "left" | "right"}>>} transitions
-   * @param {Set<string>} accepting
    * @param {string} start
+   * @param {string} accept
+   * @param {string} reject
    */
-  constructor(transitions, accepting, start) {
+  constructor(transitions, start, accept, reject) {
     /** @type {Map<string, Map<string, {state: string, symbol: string, move: "left" | "right"}>>} */
     this.transitions = transitions;
 
-    /** @type {Set<string>} */
-    this.accepting = accepting;
-
     /** @type {string} */
     this.start = start;
+    /** @type {string} */
+    this.accept = accept;
+    /** @type {string} */
+    this.reject = reject;
 
-    /** @type {Map<string, {result: "Accepted" | "Rejected" | "Timed Out", steps: {state: string, tape: string, position: number}[]}>} */
+    /** @type {Map<string, {result: string, steps: {state: string, tape: string, position: number}[]}>} */
     this.record = new Map();
   }
 
   /**
    * @param {string} tape
-   * @returns {{result: "Accepted" | "Rejected" | "Timed Out", steps: {state: string, tape: string, position: number}[]}}
+   * @returns {{result: string, steps: {state: string, tape: string, position: number}[]}}
    */
   run(tape) {
     tape.trim();
@@ -58,15 +60,23 @@ class Machine {
     for (let stepCount = 0; stepCount < 10000; ++stepCount) {
       record.steps.push({ state: state, tape: tape, position: position });
 
+      if (state === this.accept) {
+        record.result = "Accepted";
+        return record;
+      } else if (state === this.reject) {
+        record.result = "Rejected";
+        return record;
+      }
+
       const stateTransitions = this.transitions.get(state);
       if (stateTransitions === undefined) {
-        record.result = this.accepting.has(state) ? "Accepted" : "Rejected";
+        record.result = "Rejected (implciit)";
         return record;
       }
 
       const transition = stateTransitions.get(tape[position]);
       if (transition === undefined) {
-        record.result = this.accepting.has(state) ? "Accepted" : "Rejected";
+        record.result = "Rejected (implciit)";
         return record;
       }
 
@@ -78,12 +88,8 @@ class Machine {
       if (transition.move === "left") --position;
       else ++position;
 
-      if (position === tape.length) {
-        tape += " ";
-      } else if (position === -1) {
-        tape = " " + tape;
-        position = 0;
-      }
+      if (position === tape.length) tape += " ";
+      else if (position === -1) position = 0;
     }
 
     record.result = "Timed Out";
@@ -193,35 +199,7 @@ document.getElementById("tests-rerun").addEventListener("click", () => {
     });
   }
 
-  const acceptingChildren = document.getElementById(
-    "accepting-states-body"
-  ).children;
-  /** @type {Set<string>} */
-  const accepting = new Set();
-  for (let idx = 0; idx < acceptingChildren.length; idx++) {
-    const id = Number.parseInt(
-      acceptingChildren[idx].id.match(/states-row-([0-9]+)/)[1]
-    );
-
-    /** @type {string} */
-    const state = document.getElementById(`accepting-states-state-${id}`).value;
-    if (state.length === 0) {
-      document
-        .getElementById("error-messages")
-        .insertAdjacentHTML(
-          "beforeend",
-          `<p>accepting state number ${
-            idx + 1
-          } is not a valid state - it can't be the empty string</p>`
-        );
-      errored = true;
-    }
-
-    if (state.length === 0) continue;
-
-    accepting.add(state);
-  }
-
+  /** @type {string} */
   const startState = document.getElementById("start-state").value;
   if (startState.length === 0) {
     document
@@ -233,10 +211,34 @@ document.getElementById("tests-rerun").addEventListener("click", () => {
     errored = true;
   }
 
+  /** @type {string} */
+  const acceptState = document.getElementById("accept-state").value;
+  if (acceptState.length === 0) {
+    document
+      .getElementById("error-messages")
+      .insertAdjacentHTML(
+        "beforeend",
+        `<p>accept state is not a valid state - it can't be the empty string</p>`
+      );
+    errored = true;
+  }
+
+  /** @type {string} */
+  const rejectState = document.getElementById("reject-state").value;
+  if (rejectState.length === 0) {
+    document
+      .getElementById("error-messages")
+      .insertAdjacentHTML(
+        "beforeend",
+        `<p>reject state is not a valid state - it can't be the empty string</p>`
+      );
+    errored = true;
+  }
+
   document.getElementById("error-message-container").hidden = !errored;
   if (errored) return;
 
-  machine = new Machine(transitions, accepting, startState);
+  machine = new Machine(transitions, startState, acceptState, rejectState);
 
   // run tests
   const testChildren = document.getElementById("tests-body").children;
