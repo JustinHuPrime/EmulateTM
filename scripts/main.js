@@ -16,8 +16,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import "./display.js";
-import "./machine.js";
+import { display } from "./display.js";
+import getMachine from "./machine.js";
 
 let counter = 0n;
 
@@ -161,7 +161,13 @@ document.getElementById("tests-add-row").addEventListener("click", () => {
   document
     .getElementById(`tests-examine-${captureCounter}`)
     .addEventListener("click", () => {
-      // TODO
+      document.getElementById("tests-rerun").click();
+      if (getMachine() !== undefined)
+        display(
+          getMachine().run(
+            document.getElementById(`tests-tape-${captureCounter}`).value
+          )
+        );
     });
   document
     .getElementById(`tests-delete-${captureCounter}`)

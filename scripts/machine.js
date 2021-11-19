@@ -16,15 +16,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/**
- * @param {string} s
- * @returns {string}
- */
-function escape(s) {
-  let div = new HTMLDivElement();
-  div.innerText = s;
-  return div.innerHTML;
-}
+import { clear } from "./display.js";
 
 class Machine {
   /**
@@ -48,14 +40,15 @@ class Machine {
 
   /**
    * @param {string} tape
-   * @returns {"Accepted" | "Rejected" | "Timed Out"}
+   * @returns {{result: "Accepted" | "Rejected" | "Timed Out", steps: {state: string, tape: string, position: number}[]}}
    */
   run(tape) {
+    tape.trim();
     if (tape.length === 0) tape = " ";
 
     let record = this.record.get(tape);
-    if (record !== undefined) return record.result;
-    record = {};
+    if (record !== undefined) return record;
+    record = { steps: [] };
     this.record.set(record);
 
     /** @type {string} */
@@ -68,17 +61,20 @@ class Machine {
       const stateTransitions = this.transitions.get(state);
       if (stateTransitions === undefined) {
         record.result = this.accepting.has(state) ? "Accepted" : "Rejected";
-        return record.result;
+        return record;
       }
 
       const transition = stateTransitions.get(tape[position]);
       if (transition === undefined) {
         record.result = this.accepting.has(state) ? "Accepted" : "Rejected";
-        return record.result;
+        return record;
       }
 
       state = transition.state;
-      tape[position] = transition.symbol;
+      tape =
+        tape.substring(0, position) +
+        transition.symbol +
+        tape.substring(position + 1);
       if (transition.move === "left") --position;
       else ++position;
 
@@ -91,17 +87,24 @@ class Machine {
     }
 
     record.result = "Timed Out";
-    return record.result;
+    return record;
   }
 }
 
 /** @type {Machine} */
 let machine;
-export default machine;
+/** @returns {Machine} */
+export default function getMachine() {
+  return machine;
+}
 
 document.getElementById("tests-rerun").addEventListener("click", () => {
+  clear();
+  document.getElementById("error-messages").innerHTML = "";
+
   // build machine
   let errored = false;
+  machine = undefined;
 
   const transitionChildren = document.getElementById("states-body").children;
   /** @type {Map<string, Map<string, {state: string, symbol: string, move: "left" | "right"}>>} */
@@ -113,46 +116,72 @@ document.getElementById("tests-rerun").addEventListener("click", () => {
 
     /** @type {string} */
     const state = document.getElementById(`states-state-${id}`).value;
+    if (state.length === 0) {
+      document
+        .getElementById("error-messages")
+        .insertAdjacentHTML(
+          "beforeend",
+          `<p>initial state for transition ${
+            idx + 1
+          } is not a valid state - it can't be the empty string</p>`
+        );
+      errored = true;
+    }
 
     /** @type {string} */
     const symbol = document.getElementById(`states-symbol-${id}`).value;
-
-    /** @type {string} */
-    const nextState = document.getElementById(`states-next-state-${id}`).value;
-
-    /** @type {string} */
-    const nextSymbol = document.getElementById(
-      `states-next-symbol-${id}`
-    ).value;
-
-    /** @type {"left" | "right"} */
-    const move = document.getElementById(`states-move-${id}`).value;
-
     if (symbol.length !== 1) {
       document
         .getElementById("error-messages")
         .insertAdjacentHTML(
           "beforeend",
-          `<p><code>${escape(
-            symbol
-          )}</code> is not a valid symbol - it must be only one character long</p>`
+          `<p>initial symbol for transition ${
+            idx + 1
+          } is not a valid symbol - it must be only one character long</p>`
         );
       errored = true;
     }
 
+    /** @type {string} */
+    const nextState = document.getElementById(`states-next-state-${id}`).value;
+    if (nextState.length === 0) {
+      document
+        .getElementById("error-messages")
+        .insertAdjacentHTML(
+          "beforeend",
+          `<p>next state for transition number ${
+            idx + 1
+          } is not a valid state - it can't be the empty string</p>`
+        );
+      errored = true;
+    }
+
+    /** @type {string} */
+    const nextSymbol = document.getElementById(
+      `states-next-symbol-${id}`
+    ).value;
     if (nextSymbol.length !== 1) {
       document
         .getElementById("error-messages")
         .insertAdjacentHTML(
           "beforeend",
-          `<p><code>${escape(
-            nextSymbol
-          )}</code> is not a valid symbol - it must be only one character long</p>`
+          `<p>next symbol for transition ${
+            idx + 1
+          } is not a valid symbol - it must be only one character long</p>`
         );
       errored = true;
     }
 
-    if (symbol.length !== 1 || nextSymbol.length !== 1) continue;
+    /** @type {"left" | "right"} */
+    const move = document.getElementById(`states-move-${id}`).value;
+
+    if (
+      state.length === 0 ||
+      symbol.length !== 1 ||
+      nextState.length === 0 ||
+      nextSymbol.length !== 1
+    )
+      continue;
 
     if (!transitions.has(state)) transitions.set(state, new Map());
     const stateTransitions = transitions.get(state);
@@ -174,28 +203,53 @@ document.getElementById("tests-rerun").addEventListener("click", () => {
       acceptingChildren[idx].id.match(/states-row-([0-9]+)/)[1]
     );
 
-    accepting.add(
-      document.getElementById(`accepting-states-state-${id}`).value
-    );
+    /** @type {string} */
+    const state = document.getElementById(`accepting-states-state-${id}`).value;
+    if (state.length === 0) {
+      document
+        .getElementById("error-messages")
+        .insertAdjacentHTML(
+          "beforeend",
+          `<p>accepting state number ${
+            idx + 1
+          } is not a valid state - it can't be the empty string</p>`
+        );
+      errored = true;
+    }
+
+    if (state.length === 0) continue;
+
+    accepting.add(state);
+  }
+
+  const startState = document.getElementById("start-state").value;
+  if (startState.length === 0) {
+    document
+      .getElementById("error-messages")
+      .insertAdjacentHTML(
+        "beforeend",
+        `<p>start state is not a valid state - it can't be the empty string</p>`
+      );
+    errored = true;
   }
 
   document.getElementById("error-message-container").hidden = !errored;
   if (errored) return;
 
-  machine = new Machine(
-    transitions,
-    accepting,
-    document.getElementById("start-state").value
-  );
+  machine = new Machine(transitions, accepting, startState);
 
   // run tests
   const testChildren = document.getElementById("tests-body").children;
-  for (let idx = 0; idx < acceptingChildren.length; idx++) {
+  for (let idx = 0; idx < testChildren.length; idx++) {
     const id = Number.parseInt(
-      acceptingChildren[idx].id.match(/states-row-([0-9]+)/)[1]
+      testChildren[idx].id.match(/tests-row-([0-9]+)/)[1]
     );
 
-    const tape = document.getElementById(`tests-tape-${id}`).value.trim();
-    document.getElementById(`tests-result-${id}`).innerText = machine.run(tape);
+    /** @type {string} */
+    document.getElementById(`tests-result-${id}`).innerText = machine.run(
+      document.getElementById(`tests-tape-${id}`).value
+    ).result;
   }
+
+  console.log(machine);
 });

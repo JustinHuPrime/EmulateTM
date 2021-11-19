@@ -43,13 +43,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     <title>Emulate a Turing Machine</title>
   </head>
 
-  <body class="vh-100 vw-100">
-    <div class="container-fluid w-100 h-100 px-0">
-      <div class="row m-0 h-25 overflow-x-scroll">
-        <canvas class="h-100" id="canvas"></canvas>
-      </div>
-      <div class="row m-0">
-        <div class="col center">
+  <body class="w-100 h-100">
+    <div class="w-100 overflow-x-scroll" id="row-0">
+      <canvas class="p-0 vh-25" id="canvas"></canvas>
+    </div>
+    <div class="container-fluid px-0">
+      <div class="row m-0" id="row-1">
+        <div class="col d-flex justify-content-center p-0">
           <div class="btn-group btn-group-primary">
             <button
               type="button"
@@ -82,7 +82,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         </div>
       </div>
       <div class="row m-0">
-        <div class="col">
+        <div class="col-6 pinned overflow-auto">
           <h1>States</h1>
           <table class="table">
             <thead>
@@ -106,7 +106,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <tbody id="states-body"></tbody>
           </table>
           <button type="button" class="btn btn-primary" id="states-add-row">
-            Add State
+            Add Transition
           </button>
           <table class="table">
             <thead>
@@ -152,12 +152,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           </table>
           <div id="error-message-container" hidden>
             <h2>Errors</h2>
-            <div id="error-messages">
-              <p>not a valid symbol</p>
-            </div>
+            <div class="text-danger" id="error-messages"></div>
           </div>
         </div>
-        <div class="col">
+        <div class="col-6 pinned overflow-auto">
           <h1>Tests</h1>
           <table class="table">
             <thead>
